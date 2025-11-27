@@ -12,6 +12,7 @@ export default function Contact() {
   });
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
+  const [backend, setBackend] = useState('node'); // 'node' or 'python'
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
   
@@ -25,6 +26,12 @@ export default function Contact() {
     
     try {
       console.log('Sending request to backend...');
+      // Use different backend URLs based on selection
+      const backendUrl = backend === 'node' 
+        ? 'http://localhost:5002/api/contact' 
+        : 'http://localhost:8000/api/contact';
+      
+      const response = await fetch(backendUrl, {
       // Add a timeout to avoid hanging requests
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -89,6 +96,35 @@ export default function Contact() {
         </h1>
         <p className="text-xl text-gray-700 dark:text-gray-200 font-medium max-w-xl mx-auto">
           We're here for your questions, collaboration, and ideas. Get in touch!
+        </p>
+      </div>
+
+      {/* Backend Selector */}
+      <div className="max-w-6xl mx-auto mb-8 px-4">
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={() => setBackend('node')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              backend === 'node'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            Node.js Backend
+          </button>
+          <button
+            onClick={() => setBackend('python')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              backend === 'python'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            Python Backend
+          </button>
+        </div>
+        <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+          Currently using: {backend === 'node' ? 'Node.js' : 'Python'} backend
         </p>
       </div>
 
